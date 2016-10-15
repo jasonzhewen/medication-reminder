@@ -6,7 +6,8 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
         end = moment().add(1, 'day').format('MM/DD/YYYY');
 
     $http.get('/api/medications?start=' + start + '&end=' + end).then(function (meds) {
-        $scope.meds = meds.data; console.log(meds);
+        $scope.meds = meds.data;
+        //console.log(meds);
     });
 
     $window.setInterval(function () {
@@ -35,6 +36,17 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             return true;
     };
 
+    $scope.checkComplete = function (m) {
+        if (m.d.f == null || m.d.f === undefined) {
+            $scope.completeTime = '';
+            return false;
+        }
+        else {
+            $scope.completeTime ='Completed at ' + moment(m.d.f).format('h:mm:ss A');
+            return true;
+        }
+    };
+
     $scope.completeMedication = function (m) {
         m.completed = true;
         var obj = {
@@ -43,13 +55,12 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             time: m.time,
             completed: true,
             d: {
-                c: '', //date created
+                c: m.d.c,
                 m: '',  //date updated
-                f: '' //date completed
+                f: moment().toDate()
             }
         };
         $http.put('/api/medications/' + m._id, JSON.stringify(obj)).then(function (meds) {
-            //$scope.meds = meds.data;
         });
     };
 
