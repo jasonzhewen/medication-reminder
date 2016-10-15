@@ -1,21 +1,58 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<header class="hero-unit" id="banner">
-  <div class="container">
-      <h1>{{currentTime}}</h1>
-  </div>
-</header>
-<div class="container">
-  <div class="row">
-    <div class="col-lg-6 col-lg-offset-3 text-center">
-        <div ng-repeat="m in meds">
-            {{m.time}} {{m.name}} {{m.dosage}}
+<header class="hero-unit" id="banner"></header>
+<div class="container main_medication">
+    
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="sub_medication date_select">
+                <h1><span>Select a date</span></h1>
+                <datepicker datepicker-show="true" style="margin:0 auto;">
+                    <input ng-model="date" ng-change="getMedicationByDate()" type="text" class="angular-datepicker-input" ng-show="false" />
+                </datepicker>
+            </div>
+            <div class="sub_medication">
+                <h2><span>{{currentTime}}</span></h2>
+                <h3><span>{{currentDate}}</span></h3>
+            </div>
+            <div>
+                <div class="sub_medication color_red" ng-repeat="m in meds | orderBy:'time':false | filter:missedFilter">
+                    <h3><span>Missed Medication</span></h3>
+                    <h3><span>{{m.time | dateFormat}}</span></h3>
+                    <h4><span>{{m.name}}</span></h4>
+                    <h5><span>{{m.dosage}}</span></h5>
+                    <button type="button" class="btn btn-primary" ng-click="completeMedication(m)">Completed</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="sub_medication">
+                <h1><span>My Medication</span></h1>
+            </div>
+            <div class="sub_medication animated" ng-repeat="m in meds | orderBy:'time':false" ng-class="{shake:checkIndication(m)}">
+                <table style="width:80%; min-width:230px;">
+                    <tr>
+                        <td align="center">
+                            <h2><span class="label label-success signmed" ng-show="checkButton1(m)">✔</span></h2>
+                            <h2><span class="label label-danger signmed" ng-show="checkButton2(m)">✖</span></h2>
+                            <h2><span class="label label-info signmed" ng-show="checkButton3(m)">⁃⁃</span></h2>
+                        </td>
+                        <td align="center">
+                            <h3><span>{{m.time | dateFormat}}</span></h3>
+                            <h4><span>{{m.name}}</span></h4>
+                            <h5><span>{{m.dosage}}</span></h5>
+                            <button type="button" class="btn btn-primary" ng-click="completeMedication(m)" ng-show="completeButtonShow(m)">Completed</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-  </div>
 </div>
 <footer class="footer">
-  <div class="container">
-      <p>© 2016 Mavencare™, made with <span class="glyphicon glyphicon-heart heart-red"></span> for better healthcare.</p>
-  </div>
+    <div class="container">
+        <p>© 2016 Mavencare™, made with <span class="glyphicon glyphicon-heart heart-red"></span> for better healthcare.</p>
+    </div>
 </footer>
+
+

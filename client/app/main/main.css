@@ -28,3 +28,31 @@
     margin-top: 70px;
     border-top: 1px solid #E5E5E5;
 }
+
+.main_medication{
+    width:50%;
+    min-width:230px;
+    margin:0 auto;
+    text-align:center; 
+    padding:20px 0 20px 0;
+    margin-top:40px;
+}
+
+.sub_medication{
+    padding:0px 0px 10px 0px;
+    border:2px solid #4393B9;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.signmed{
+    border-radius:50%;
+}
+
+.color_red{
+    border-color:red;
+}
+
+.date_select{
+    height:400px;
+}
