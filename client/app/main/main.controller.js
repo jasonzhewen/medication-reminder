@@ -42,13 +42,12 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             return false;
         }
         else {
-            $scope.completeTime ='Completed at ' + moment(m.d.f).format('h:mm:ss A');
+            $scope.completeTime ='Completed ' + moment(m.d.f).format('h:mm:ss A');
             return true;
         }
     };
 
     $scope.completeMedication = function (m) {
-        m.completed = true;
         var obj = {
             name: m.name,
             dosage: m.dosage,
@@ -61,6 +60,9 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             }
         };
         $http.put('/api/medications/' + m._id, JSON.stringify(obj)).then(function (meds) {
+            m.completed = meds.data.completed;
+            m.d.f = meds.data.d.f;
+            m.d.m = meds.data.d.m;
         });
     };
 
