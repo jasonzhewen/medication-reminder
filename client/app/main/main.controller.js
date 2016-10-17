@@ -31,7 +31,7 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
     }
     
     function checkIndication() {
-        for (i = 0; i < $scope.meds.length; i++) {
+        for (var i = 0; i < $scope.meds.length; i++) {
             if (moment().diff(moment($scope.meds[i].time)) == 0) {
                 $scope.indicationShow = true;
                 $scope.indicationTime = moment($scope.meds[i].time).format('h:mm:ss A');
