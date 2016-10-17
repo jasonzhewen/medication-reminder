@@ -1,8 +1,16 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <header class="hero-unit" id="banner"></header>
+<div id="overlay" class="container" ng-show="{{indicationShow}}" ng-click="hideIndication()">
+    <div id="overlay_content">
+        <h1><span>Indication</span></h1>
+        <h2><span>{{indicationTime}}</span></h2>
+        <h3><span>{{indicationName}}</span></h3>
+        <h4><span>{{indicationDosage}}</span></h4>
+    </div>
+</div>
+
 <div class="container main_medication">
-    
     <div class="row">
         <div class="col-lg-6">
             <div class="sub_medication date_select">
@@ -29,10 +37,10 @@
             <div class="sub_medication">
                 <h1><span>My Medication</span></h1>
             </div>
-            <div class="sub_medication animated" ng-repeat="m in meds | orderBy:'time':false" ng-class="{shake:checkIndication(m)}">
+            <div class="sub_medication" ng-repeat="m in meds | orderBy:'time':false">
                 <table style="width:90%; min-width:230px;">
                     <tr>
-                        <td align="center">
+                        <td align="center" style="width:30%">
                             <h2><span class="label label-success signmed" ng-show="checkButton1(m)">✔</span></h2>
                             <h2><span class="label label-danger signmed" ng-show="checkButton2(m)">✖</span></h2>
                             <h2><span class="label label-info signmed" ng-show="checkButton3(m)">⁃⁃</span></h2>

@@ -4,15 +4,20 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
 
     var start = moment().format('MM/DD/YYYY'),
         end = moment().add(1, 'day').format('MM/DD/YYYY');
+    $scope.indicationShow = false;
+    $scope.indicationTime = '';
+    $scope.indicationName = '';
+    $scope.indicationDosage = '';
 
     $http.get('/api/medications?start=' + start + '&end=' + end).then(function (meds) {
         $scope.meds = meds.data;
-        //console.log(meds);
+        console.log($scope.meds.length);
     });
 
     $window.setInterval(function () {
         $scope.currentTime = moment().format('h:mm:ss A');
         $scope.currentDate = moment().format('MMMM Do , YYYY');
+        checkIndication();
         $scope.$apply();
     }, 1000);
 
@@ -24,9 +29,20 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             $scope.meds = meds.data;
         });
     }
+    
+    function checkIndication() {
+        for (i = 0; i < $scope.meds.length; i++) {
+            if (moment().diff(moment($scope.meds[i].time)) == 0) {
+                $scope.indicationShow = true;
+                $scope.indicationTime = moment($scope.meds[i].time).format('h:mm:ss A');
+                $scope.indicationName = $scope.meds[i].name;
+                $scope.indicationDosage = $scope.meds[i].dosage;
+            }
+        }
+    };
 
-    $scope.checkIndication = function (m) {
-        return (moment().diff(moment(m.time)) == 0);
+    $scope.hideIndication = function () {
+        $scope.indicationShow = false;
     };
 
     $scope.completeButtonShow = function (m) {
@@ -55,7 +71,7 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
             completed: true,
             d: {
                 c: m.d.c,
-                m: '',  //date updated
+                m: '',
                 f: moment().toDate()
             }
         };
