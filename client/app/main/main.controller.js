@@ -11,7 +11,6 @@ angular.module('medicationReminderApp').controller('MainCtrl', function ($scope,
 
     $http.get('/api/medications?start=' + start + '&end=' + end).then(function (meds) {
         $scope.meds = meds.data;
-        console.log($scope.meds.length);
     });
 
     $window.setInterval(function () {
