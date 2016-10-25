@@ -1,63 +1,118 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <header class="hero-unit" id="banner"></header>
-<div id="overlay" class="container" ng-show="indicationShow" ng-click="hideIndication()">
+
+<!--Indication Start-->
+<div id="overlay" class="container" ng-show="indicationViewModel.indicationShow" ng-click="hideIndication()">
     <div id="overlay_content">
         <h1><span>Indication</span></h1>
-        <h2><span>{{indicationTime}}</span></h2>
-        <h3><span>{{indicationName}}</span></h3>
-        <h4><span>{{indicationDosage}}</span></h4>
+        <h2><span>{{indicationViewModel.indicationTime}}</span></h2>
+        <h3><span>{{indicationViewModel.indicationName}}</span></h3>
+        <h4><span>{{indicationViewModel.indicationDosage}}</span></h4>
         <button type="button" class="btn btn-danger" ng-click="hideIndication()">CLOSE</button>
     </div>
 </div>
+<!--Indication Ends-->
 
 <div class="container main_medication">
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="sub_medication date_select">
-                <h1><span>Select a date</span></h1>
-                <datepicker datepicker-show="true" style="margin:0 auto;">
-                    <input ng-model="date" ng-change="getMedicationByDate()" type="text" class="angular-datepicker-input" ng-show="false" />
-                </datepicker>
+
+    <div class="medication_title">
+        <span>Medication</span>&nbsp;&nbsp;
+        <span>manage board</span>
+    </div>
+
+    <div id="pickdate">        
+        <div class="noticeC" datepicker date-typer="false" date-format="MMMM d, y">
+            <input ng-model="date" ng-change="getMedicationByDate()" type="text" class="txt_datepicker" readonly="readonly" />
+        </div>           
+        <div class="notice">
+            <h5><strong>Please select a date to view medications!</strong></h5>
+        </div>       
+    </div>
+
+    <div id="medication_board">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="subBoard alert-info" ng-click="getMedicationByType('upcoming')">
+                    <span></span>
+                    <div class="subBoard_title color_info">
+                        <h5>Upcoming Medication</h5>
+                    </div>
+                    <div class="subBoard_content">
+                        <table style="width:100%;">
+                            <tr>
+                                <td align="center" style="width:30%">
+                                    <div class="specialSymbol">U</div>
+                                </td>
+                                <td align="center" style="width:70%">
+                                    <h2>{{medicationViewModel.medNum.upcomingNum}}</h2>
+                                    <h4>Medication</h4>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="subBoard alert-success" ng-click="getMedicationByType('completed')">
+                    <span></span>
+                    <div class="subBoard_title color_success">
+                        <h5>Completed Medication</h5>
+                    </div>
+                    <div class="subBoard_content">
+                        <table style="width:100%;">
+                            <tr>
+                                <td align="center" style="width:30%">
+                                    <div class="specialSymbol">✔</div>
+                                </td>
+                                <td align="center" style="width:70%">
+                                    <h2>{{medicationViewModel.medNum.completedNum}}</h2>
+                                    <h4>Medication</h4>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="subBoard alert-danger" ng-click="getMedicationByType('missed')">
+                    <span></span>
+                    <div class="subBoard_title color_danger">
+                        <h5>Missed Medication</h5>
+                    </div>
+                    <div class="subBoard_content">
+                        <table style="width:100%;">
+                            <tr>
+                                <td align="center" style="width:30%">
+                                    <div class="specialSymbol">✘</div>
+                                </td>
+                                <td align="center" style="width:70%">
+                                    <h2>{{medicationViewModel.medNum.missedNum}}</h2>
+                                    <h4>Medication</h4>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="sub_medication">
-                <h2><span>{{currentTime}}</span></h2>
-                <h3><span>{{currentDate}}</span></h3>
-            </div>
-            <div>
-                <div class="sub_medication color_red" ng-repeat="m in meds | orderBy:'time':false | filter:missedFilter">
-                    <h3><span>Missed Medication</span></h3>
-                    <h3><span>{{m.time | dateFormat}}</span></h3>
-                    <h4><span>{{m.name}}</span></h4>
-                    <h5><span>{{m.dosage}}</span></h5>
-                    <button type="button" class="btn btn-primary" ng-click="completeMedication(m)">Completed</button>
+            <div class="col-md-8">
+                <div class="detailsBoard" ng-class="medicationViewModel.contentColor" style="background-color:white;">
+                    <div class="subBoard_title" ng-class="medicationViewModel.titleColor">
+                        <h3>{{medicationViewModel.title}}</h3>
+                        <h5>{{medicationViewModel.date}}</h5>
+                    </div>
+                    <div class="subBoard_content">
+                        <div class="sub_medication" ng-repeat="m in med | orderBy:'time':false">
+                            <h4><span><strong>{{m.name}}</strong></span></h4>
+                            <h5><span>{{m.time | dateFormat}}</span></h5>
+                            <h5><span>{{m.dosage}}</span></h5>
+                            <h5><span ng-bind="completeTime" ng-show="checkComplete(m)"></span></h5>
+                            <button type="button" class="btn btn-info" ng-click="completeMedication(m)" ng-show="completeButtonShow(m)">Completed</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="sub_medication">
-                <h1><span>My Medication</span></h1>
-            </div>
-            <div class="sub_medication" ng-repeat="m in meds | orderBy:'time':false">
-                <table style="width:90%; min-width:230px;">
-                    <tr>
-                        <td align="center" style="width:30%">
-                            <h2><span class="label label-success signmed" ng-show="checkButton1(m)">✔</span></h2>
-                            <h2><span class="label label-danger signmed" ng-show="checkButton2(m)">✖</span></h2>
-                            <h2><span class="label label-info signmed" ng-show="checkButton3(m)">⁃⁃</span></h2>
-                        </td>
-                        <td align="center">
-                            <h3><span>{{m.time | dateFormat}}</span></h3>
-                            <h4><span>{{m.name}}</span></h4>
-                            <h5><span>{{m.dosage}}</span></h5>
-                            <h4><span ng-bind="completeTime" ng-show="checkComplete(m)"></span></h4>
-                            <button type="button" class="btn btn-primary" ng-click="completeMedication(m)" ng-show="completeButtonShow(m)">Completed</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
     </div>
+    
 </div>
 <footer class="footer">
     <div class="container">
